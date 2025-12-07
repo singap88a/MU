@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Clock, AlertCircle, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent } from '../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent } from '../../../components/ui/Card';
 
 export default function StudentQuiz() {
   const { quizId } = useParams();

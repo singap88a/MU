@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowRight, Download, CheckCircle, XCircle, Users } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { Input } from '../components/ui/Input';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Input } from '../../../components/ui/Input';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function AssignmentDetails() {
   const { assignmentId } = useParams();

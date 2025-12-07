@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { Badge } from '../../../components/ui/Badge';
 import { LogOut, User, Calendar, FileText, Upload, CheckCircle, Clock, AlertCircle, BookOpen, Users } from 'lucide-react';
-import { QuizUploadModal } from '../components/ui/QuizUploadModal';
-import { useSectionContext } from '../context/SectionContext';
+import { QuizUploadModal } from '../../../components/ui/QuizUploadModal';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function StudentDashboard() {
   const navigate = useNavigate();

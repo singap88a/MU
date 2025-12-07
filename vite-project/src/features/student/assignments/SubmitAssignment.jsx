@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Upload, CheckCircle, FileText, AlertCircle } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
 
 export default function SubmitAssignment() {
   const { sectionId, assignmentId } = useParams();

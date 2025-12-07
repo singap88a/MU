@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Sidebar } from '../components/layout/Sidebar';
-import { Navbar } from '../components/layout/Navbar';
-import { useSectionContext } from '../context/SectionContext';
+import { Sidebar } from '../../../components/layout/Sidebar';
+import { Navbar } from '../../../components/layout/Navbar';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export function DashboardLayout() {
   const { selectedSection } = useSectionContext();

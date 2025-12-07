@@ -7,9 +7,9 @@ import {
   Clock,
   AlertCircle
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useSectionContext } from '../context/SectionContext';
+import { useSectionContext } from '../../../context/SectionContext';
 
 const attendanceData = [
   { name: 'الأسبوع 1', attendance: 95 },

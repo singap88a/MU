@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { ThemeToggle } from '../../../components/ThemeToggle';
 
 export function AuthLayout() {
   return (

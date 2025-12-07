@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle2, XCircle, Home, RotateCcw } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent } from '../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent } from '../../../components/ui/Card';
 
 export default function StudentQuizResult() {
   const { state } = useLocation();

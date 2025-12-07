@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, FileText, GraduationCap, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Card, CardContent } from '../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Card, CardContent } from '../../components/ui/Card';
 
 export default function StudentRegister() {
   const navigate = useNavigate();

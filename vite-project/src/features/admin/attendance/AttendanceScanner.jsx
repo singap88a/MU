@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { QrCode, Camera, CheckCircle2, XCircle, Search } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent } from '../components/ui/Card';
-import { Input } from '../components/ui/Input';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent } from '../../../components/ui/Card';
+import { Input } from '../../../components/ui/Input';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function AttendanceScanner() {
   const { selectedSection } = useSectionContext();

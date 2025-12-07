@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSectionContext } from '../context/SectionContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
+import { useSectionContext } from '../../../context/SectionContext';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
 import { Calendar, Clock, MapPin, BookOpen, Users, GraduationCap } from 'lucide-react';
-import { ThemeToggle } from '../components/ThemeToggle';
+import { ThemeToggle } from '../../../components/ThemeToggle';
 
 export default function SectionSelection() {
   const { sections, selectSection } = useSectionContext();

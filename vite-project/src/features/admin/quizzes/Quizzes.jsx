@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Clock, FileText, CheckCircle2, MoreHorizontal } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { Modal } from '../components/ui/Modal';
-import { Input } from '../components/ui/Input';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Modal } from '../../../components/ui/Modal';
+import { Input } from '../../../components/ui/Input';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function Quizzes() {
   const { selectedSection, addQuiz } = useSectionContext();

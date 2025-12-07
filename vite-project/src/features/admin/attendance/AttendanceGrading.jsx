@@ -1,10 +1,10 @@
 import React from 'react';
 import { FileDown, Calculator } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
-import { Badge } from '../components/ui/Badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
+import { Badge } from '../../../components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function AttendanceGrading() {
   const { selectedSection } = useSectionContext();

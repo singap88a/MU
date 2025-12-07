@@ -1,9 +1,9 @@
 import React from 'react';
 import { User, Mail, Phone, MapPin, Calendar, BookOpen, CheckCircle2, Clock } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
 
 const activities = [
   { id: 1, type: 'attendance', title: 'حضور سكشن 5', date: '2023-11-20', status: 'present' },

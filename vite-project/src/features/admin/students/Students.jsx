@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, MoreHorizontal, FileDown } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
-import { Badge } from '../components/ui/Badge';
-import { Modal } from '../components/ui/Modal';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Input } from '../../../components/ui/Input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../components/ui/Table';
+import { Badge } from '../../../components/ui/Badge';
+import { Modal } from '../../../components/ui/Modal';
+import { useSectionContext } from '../../../context/SectionContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Students() {

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowRight, Plus, Trash2, Edit, Play, Users, Clock, CheckCircle, FileText } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { Modal } from '../components/ui/Modal';
-import { Input } from '../components/ui/Input';
-import { useSectionContext } from '../context/SectionContext';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Modal } from '../../../components/ui/Modal';
+import { Input } from '../../../components/ui/Input';
+import { useSectionContext } from '../../../context/SectionContext';
 
 export default function QuizDetails() {
   const { quizId } = useParams();

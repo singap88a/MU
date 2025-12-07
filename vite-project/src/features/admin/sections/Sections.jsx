@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Plus, Search, MoreHorizontal, Users, Calendar, Clock } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
-import { Modal } from '../components/ui/Modal';
+import { Button } from '../../../components/ui/Button';
+import { Input } from '../../../components/ui/Input';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Modal } from '../../../components/ui/Modal';
 
 const sectionsData = [
   { id: 1, number: '1', day: 'الأحد', time: '08:00 ص - 10:00 ص', students: 45, location: 'معمل 3' },

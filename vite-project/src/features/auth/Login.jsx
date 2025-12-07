@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, GraduationCap, ShieldCheck } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
 
 export default function Login() {
   const navigate = useNavigate();

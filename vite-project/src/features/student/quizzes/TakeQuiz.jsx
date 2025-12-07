@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Badge } from '../components/ui/Badge';
+import { Button } from '../../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
 
 // Mock quiz data - في التطبيق الحقيقي سيتم جلبها من API
 const mockQuiz = {
