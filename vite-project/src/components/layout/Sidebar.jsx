@@ -15,12 +15,12 @@ import { useSectionContext } from '../../context/SectionContext';
 import { Badge } from '../ui/Badge';
 
 const navigation = [
-  { name: 'لوحة التحكم', href: '/admin', icon: LayoutDashboard },
-  { name: 'إدارة الطلاب', href: '/admin/students', icon: Users },
-  { name: 'ماسح الحضور', href: '/admin/attendance', icon: QrCode },
-  { name: 'تقييم الحضور', href: '/admin/grading', icon: Calculator },
-  { name: 'الكويزات', href: '/admin/quizzes', icon: FileText },
-  { name: 'التسكوت', href: '/admin/assignments', icon: CheckSquare },
+  { name: 'لوحة التحكم', href: '/instructor-dashboard', icon: LayoutDashboard },
+  { name: 'إدارة الطلاب', href: '/instructor-dashboard/students', icon: Users },
+  { name: 'ماسح الحضور', href: '/instructor-dashboard/attendance', icon: QrCode },
+  { name: 'تقييم الحضور', href: '/instructor-dashboard/grading', icon: Calculator },
+  { name: 'الكويزات', href: '/instructor-dashboard/quizzes', icon: FileText },
+  { name: 'التسكوت', href: '/instructor-dashboard/assignments', icon: CheckSquare },
 ];
 
 export function Sidebar() {

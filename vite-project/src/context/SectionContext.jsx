@@ -475,6 +475,24 @@ export const SectionProvider = ({ children }) => {
     return sections.filter(s => s.instructorId === instructorId);
   };
 
+  const addSection = (sectionData) => {
+    setSections(prevSections => {
+      const newSection = {
+        ...sectionData,
+        id: Date.now(),
+        sectionCode: generateSectionCode(),
+        students: [],
+        quizzes: [],
+        assignments: [],
+        instructorId: sectionData.instructorId || DEFAULT_INSTRUCTOR_ID // Ensure instructorId is set
+      };
+
+      const updatedSections = [...prevSections, newSection];
+      localStorage.setItem('sections_data', JSON.stringify(updatedSections));
+      return updatedSections;
+    });
+  };
+
   const addAssignment = (sectionId, assignment) => {
     setSections(prevSections => {
       const updatedSections = prevSections.map(section => {
@@ -580,6 +598,7 @@ export const SectionProvider = ({ children }) => {
       clearSection, 
       getSectionByCode,
       getInstructorSections,
+      addSection, // Add this
       addAssignment, 
       addQuiz, 
       updateQuizQuestions, 
