@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, Building2 } from 'lucide-react';
+import { User, Mail, Lock, GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, Building2, Upload } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useInstructorContext } from '../../context/InstructorContext';
@@ -50,23 +50,30 @@ export default function InstructorRegister() {
 
     setTimeout(() => {
       try {
+        // Here we would upload the file to storage
+        // For simulation, we'll just proceed
+        
         registerInstructor({
           name: formData.name,
           email: formData.email,
           password: formData.password,
           university: formData.university,
-          department: formData.department
+          department: formData.department,
+          status: 'pending', // Important: New pending status
+          proofFile: formData.proofFile ? URL.createObjectURL(formData.proofFile) : null // Simulate file URL
         });
         
         setIsLoading(false);
-        alert('تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول');
+        // Show success confirmation instead of immediate login redirect
+        alert('تم إرسال طلبك بنجاح! سيتم مراجعته وإبلاغك عند التفعيل.');
         navigate('/');
       } catch (err) {
         setError(err.message);
         setIsLoading(false);
       }
-    }, 1000);
+    }, 1500);
   };
+
 
   const steps = [
     { number: 1, title: 'البيانات الشخصية', icon: User },
@@ -210,29 +217,47 @@ export default function InstructorRegister() {
             {step === 3 && (
               <div className="space-y-6 animate-in slide-in-from-right-8 duration-500">
                 <div className="bg-secondary-50 dark:bg-secondary-800/50 p-6 rounded-xl space-y-4">
-                  <h3 className="font-bold text-lg text-secondary-900 dark:text-white">مراجعة البيانات</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-secondary-500 block">الاسم</span>
-                      <span className="font-medium text-secondary-900 dark:text-white">{formData.name}</span>
-                    </div>
-                    <div>
-                      <span className="text-secondary-500 block">البريد الإلكتروني</span>
-                      <span className="font-medium text-secondary-900 dark:text-white">{formData.email}</span>
-                    </div>
-                    {formData.university && (
-                      <div>
-                        <span className="text-secondary-500 block">الجامعة</span>
-                        <span className="font-medium text-secondary-900 dark:text-white">{formData.university}</span>
+                  <h3 className="font-bold text-lg text-secondary-900 dark:text-white">إثبات الهوية</h3>
+                  <p className="text-secondary-500 text-sm">
+                    يرجى رفع صورة لإثبات الهوية (كارنيه الجامعة أو البطاقة الشخصية) ليتم مراجعة طلبك من قبل المشرفين.
+                  </p>
+                  
+                  <div className="border-2 border-dashed border-secondary-300 dark:border-secondary-700 rounded-lg p-8 text-center hover:border-primary-500 dark:hover:border-primary-500 transition-colors bg-white dark:bg-secondary-900">
+                    <input 
+                      type="file" 
+                      id="proof-upload" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={(e) => setFormData({...formData, proofFile: e.target.files[0]})}
+                    />
+                    <label htmlFor="proof-upload" className="cursor-pointer flex flex-col items-center gap-4">
+                      <div className="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-primary-600">
+                        <Upload className="h-6 w-6" />
                       </div>
-                    )}
-                    {formData.department && (
                       <div>
-                        <span className="text-secondary-500 block">القسم</span>
-                        <span className="font-medium text-secondary-900 dark:text-white">{formData.department}</span>
+                        {formData.proofFile ? (
+                          <span className="text-emerald-600 font-bold">{formData.proofFile.name}</span>
+                        ) : (
+                          <>
+                            <p className="font-bold text-secondary-900 dark:text-white mb-1">اضغط لرفع الصورة</p>
+                            <p className="text-secondary-500 text-xs">JPG, PNG بحد أقصى 5MB</p>
+                          </>
+                        )}
                       </div>
-                    )}
+                    </label>
                   </div>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex gap-3">
+                   <div className="bg-blue-100 dark:bg-blue-800 rounded-full p-1 h-fit">
+                     <CheckCircle2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                   </div>
+                   <div className="text-sm">
+                     <p className="font-bold text-blue-800 dark:text-blue-300 mb-1">تنبيه هام</p>
+                     <p className="text-blue-700 dark:text-blue-400">
+                       سيتم مراجعة طلبك يدويًا من قبل إدارة المنصة. ستصلك رسالة عبر البريد الإلكتروني عند الموافقة على الطلب وتمكينك من الدخول.
+                     </p>
+                   </div>
                 </div>
               </div>
             )}
@@ -250,8 +275,8 @@ export default function InstructorRegister() {
                 </Button>
               )}
 
-              <Button type="submit" isLoading={isLoading}>
-                {step === 3 ? 'إنشاء الحساب' : 'التالي'}
+              <Button type="submit" isLoading={isLoading} disabled={step === 3 && !formData.proofFile}>
+                {step === 3 ? 'إرسال الطلب للمراجعة' : 'التالي'}
                 {step !== 3 && <ArrowLeft className="mr-2 h-4 w-4" />}
               </Button>
             </div>

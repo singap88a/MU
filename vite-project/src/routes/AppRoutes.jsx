@@ -21,6 +21,10 @@ import StudentProfile from '../features/student/profile/StudentProfile';
 import StudentDashboard from '../features/student/dashboard/StudentDashboard';
 import StudentQuiz from '../features/student/quizzes/StudentQuiz';
 import StudentQuizResult from '../features/student/quizzes/StudentQuizResult';
+import SuperAdminLayout from '../features/super-admin/SuperAdminLayout';
+import SuperAdminDashboard from '../features/super-admin/SuperAdminDashboard';
+import InstructorsManagement from '../features/super-admin/InstructorsManagement';
+import StudentsManagement from '../features/super-admin/StudentsManagement';
 
 const AppRoutes = () => {
   return (
@@ -46,8 +50,16 @@ const AppRoutes = () => {
       <Route path="/take-quiz/:sectionId/:quizId" element={<TakeQuiz />} />
       <Route path="/submit-assignment/:sectionId/:assignmentId" element={<SubmitAssignment />} />
 
-      {/* Admin Dashboard Routes */}
-      <Route path="/admin" element={<DashboardLayout />}>
+      {/* Super Admin Routes - Platform Management */}
+      <Route path="/admin" element={<SuperAdminLayout />}>
+        <Route index element={<SuperAdminDashboard />} />
+        <Route path="instructors" element={<InstructorsManagement />} />
+        <Route path="students" element={<StudentsManagement />} />
+        <Route path="settings" element={<div>صفحة الإعدادات (قريباً)</div>} />
+      </Route>
+
+      {/* Instructor Dashboard Routes (Renamed to avoid conflict) */}
+      <Route path="/instructor-dashboard" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Students />} />
         <Route path="attendance" element={<AttendanceScanner />} />

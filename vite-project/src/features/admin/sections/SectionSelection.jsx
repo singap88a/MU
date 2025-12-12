@@ -21,7 +21,7 @@ export default function SectionSelection() {
 
   const handleSelectSection = (sectionId) => {
     selectSection(sectionId);
-    navigate('/admin');
+    navigate('/instructor-dashboard');
   };
 
   const handleCopyCode = (code, e) => {

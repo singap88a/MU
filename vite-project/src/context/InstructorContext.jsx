@@ -47,6 +47,8 @@ export const InstructorProvider = ({ children }) => {
       password: instructorData.password, // In production, this should be hashed
       department: instructorData.department || '',
       university: instructorData.university || '',
+      status: instructorData.status || 'active', // Default to active for backward compatibility if not provided
+      proofFile: instructorData.proofFile || null,
       createdAt: new Date().toISOString(),
     };
 
@@ -68,6 +70,11 @@ export const InstructorProvider = ({ children }) => {
 
     if (instructor.password !== password) {
       throw new Error('كلمة المرور غير صحيحة');
+    }
+
+    // Check status
+    if (instructor.status === 'pending') {
+      throw new Error('حسابك قيد المراجعة حالياً من قبل الإدارة. ستصلك رسالة عند التفعيل.');
     }
 
     setCurrentInstructor(instructor);
