@@ -131,7 +131,7 @@ export default function AssignmentDetails() {
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-secondary-200 dark:border-secondary-800">
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold">
-                    {student.name.split(' ')[0][0]}{student.name.split(' ')[1]?.[0] || ''}
+                    {student.name ? (student.name.split(' ')[0][0] + (student.name.split(' ')[1]?.[0] || '')) : '?'}
                   </div>
                   <div>
                     <p className="font-medium text-secondary-900 dark:text-white">{student.name}</p>

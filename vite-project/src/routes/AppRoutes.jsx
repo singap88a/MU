@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { DashboardLayout } from '../features/admin/layouts/DashboardLayout';
 import { AuthLayout } from '../features/auth/layouts/AuthLayout';
 import Login from '../features/auth/Login';
+import InstructorRegister from '../features/auth/InstructorRegister';
 import StudentLogin from '../features/auth/StudentLogin';
 import StudentRegister from '../features/auth/StudentRegister';
 import SectionSelection from '../features/admin/sections/SectionSelection';
@@ -27,6 +28,9 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Navigate to="/" replace />} />
+      
+      {/* Instructor Routes */}
+      <Route path="/instructor/register" element={<InstructorRegister />} />
       
       {/* Student Portal Routes */}
       <Route path="/student/login" element={<Navigate to="/" replace />} />

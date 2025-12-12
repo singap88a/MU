@@ -15,17 +15,8 @@ export default function StudentDashboard() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [assignments, setAssignments] = useState([]);
+  const [activeQuizzes, setActiveQuizzes] = useState([]);
   
-  // Mock exams data
-  const upcomingExams = [
-    { id: 1, title: 'كويز 1 - مقدمة في البرمجة', date: '2024-03-15', time: '10:00 AM', duration: '30 دقيقة', marks: 10, status: 'upcoming' },
-    { id: 2, title: 'كويز 2 - الخوارزميات', date: '2024-03-20', time: '11:00 AM', duration: '45 دقيقة', marks: 15, status: 'upcoming' },
-  ];
-
-  const pastExams = [
-    { id: 3, title: 'ميدتيرم - هياكل بيانات', date: '2024-02-10', grade: '18/20', status: 'completed' },
-  ];
-
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (!storedUser) {
@@ -35,12 +26,46 @@ export default function StudentDashboard() {
     const studentData = JSON.parse(storedUser);
     setStudent(studentData);
 
-    // Load assignments for the student's section
-    const storedSections = JSON.parse(localStorage.getItem('sections_data') || '[]');
-    const section = storedSections.find(s => s.number === studentData.section);
+    console.log('👤 Student Data:', studentData);
 
-    if (section && section.assignments) {
-      setAssignments(section.assignments);
+    // Load section data for the student - always read from localStorage
+    const storedSections = JSON.parse(localStorage.getItem('sections_data') || '[]');
+    console.log('📚 Total Sections in localStorage:', storedSections.length);
+    
+    // Find student's section by code or number
+    const section = storedSections.find(s => 
+      s.sectionCode === studentData.sectionCode || s.number === studentData.section
+    );
+
+    console.log('🎯 Found Section:', section ? section.subject : 'NOT FOUND');
+
+    if (section) {
+      console.log('📊 Section Details:', {
+        code: section.sectionCode,
+        number: section.number,
+        subject: section.subject,
+        totalQuizzes: section.quizzes?.length || 0,
+        activeQuizzes: section.quizzes?.filter(q => q.status === 'active').length || 0
+      });
+
+      // Load assignments
+      if (section.assignments) {
+        setAssignments(section.assignments);
+      }
+
+      // Load active quizzes
+      if (section.quizzes) {
+        const active = section.quizzes.filter(q => q.status === 'active');
+        console.log('✅ Active Quizzes:', active.map(q => q.title));
+        setActiveQuizzes(active);
+      } else {
+        console.log('⚠️ No quizzes array found in section');
+      }
+    } else {
+      console.log('❌ Section not found for student:', {
+        studentSectionCode: studentData.sectionCode,
+        studentSection: studentData.section
+      });
     }
   }, [navigate]);
 
@@ -198,44 +223,56 @@ export default function StudentDashboard() {
 
             {activeTab === 'exams' && (
               <div className="space-y-4">
-                {upcomingExams.map((exam) => (
-                  <Card key={exam.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-lg text-secondary-900 dark:text-white">{exam.title}</h3>
-                            <Badge variant="warning">قريباً</Badge>
+                {activeQuizzes.length > 0 ? (
+                  activeQuizzes.map((quiz) => (
+                    <Card key={quiz.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-bold text-lg text-secondary-900 dark:text-white">{quiz.title}</h3>
+                              <Badge variant="success">نشط</Badge>
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-secondary-500 dark:text-secondary-400">
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-4 w-4" />
+                                <span>{quiz.date}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-4 w-4" />
+                                <span>{quiz.duration}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <FileText className="h-4 w-4" />
+                                <span>
+                                  {Array.isArray(quiz.questions) 
+                                    ? quiz.questions.length 
+                                    : (quiz.questionsData ? quiz.questionsData.length : quiz.questions)} سؤال
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-4 text-sm text-secondary-500 dark:text-secondary-400">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              <span>{exam.date}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
-                              <span>{exam.time}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
+                          
+                          <div className="flex flex-col gap-2 min-w-[150px]">
+                            <Button onClick={() => navigate(`/student/quiz/${quiz.id}`)} className="w-full gap-2">
                               <FileText className="h-4 w-4" />
-                              <span>{exam.marks} درجات</span>
-                            </div>
+                              بدء الاختبار
+                            </Button>
+                            <p className="text-xs text-center text-secondary-400">
+                              المدة: {quiz.duration}
+                            </p>
                           </div>
                         </div>
-                        
-                        <div className="flex flex-col gap-2 min-w-[150px]">
-                          <Button onClick={() => navigate(`/student/quiz/${exam.id}`)} className="w-full gap-2">
-                            <FileText className="h-4 w-4" />
-                            بدء الاختبار
-                          </Button>
-                          <p className="text-xs text-center text-secondary-400">
-                            المدة: {exam.duration}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700">
+                    <BookOpen className="h-12 w-12 mx-auto text-secondary-300 mb-4" />
+                    <h3 className="text-lg font-medium text-secondary-900 dark:text-white">لا توجد اختبارات نشطة حالياً</h3>
+                    <p className="text-secondary-500">سيتم إظهار الاختبارات هنا عند إضافتها.</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -289,26 +326,10 @@ export default function StudentDashboard() {
             )}
 
             {activeTab === 'grades' && (
-              <div className="space-y-4">
-                {pastExams.map((exam) => (
-                  <Card key={exam.id}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-bold text-lg text-secondary-900 dark:text-white">{exam.title}</h3>
-                          <p className="text-sm text-secondary-500">{exam.date}</p>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-2xl font-bold text-green-600 dark:text-green-400">{exam.grade}</span>
-                          <div className="flex items-center gap-1 text-green-600 text-sm mt-1">
-                            <CheckCircle className="h-4 w-4" />
-                            <span>تم التصحيح</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700">
+                <CheckCircle className="h-12 w-12 mx-auto text-secondary-300 mb-4" />
+                <h3 className="text-lg font-medium text-secondary-900 dark:text-white">لا توجد درجات بعد</h3>
+                <p className="text-secondary-500">سيتم إظهار درجات الاختبارات هنا بعد التصحيح.</p>
               </div>
             )}
 

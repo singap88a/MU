@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, GraduationCap, ShieldCheck } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { useInstructorContext } from '../../context/InstructorContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { loginInstructor } = useInstructorContext();
   const [activeTab, setActiveTab] = useState('admin'); // 'admin' or 'student'
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +26,12 @@ export default function Login() {
     setTimeout(() => {
       setIsLoading(false);
       if (activeTab === 'admin') {
-        // Admin Login Logic
-        if (formData.email === 'admin@edu.eg' && formData.password === '123456') {
-          localStorage.setItem('isAuthenticated', 'true');
-          navigate('/admin');
-        } else {
-          alert('بيانات الدخول غير صحيحة (جرب admin@edu.eg / 123456)');
+        // Instructor Login Logic
+        try {
+          loginInstructor(formData.email, formData.password);
+          navigate('/select-section');
+        } catch (error) {
+          alert(error.message);
         }
       } else {
         // Student Login Logic
@@ -101,7 +103,7 @@ export default function Login() {
               }`}
             >
               <ShieldCheck className="h-4 w-4" />
-              عضو هيئة تدريس
+              معيد
             </button>
             <button
               onClick={() => setActiveTab('student')}
@@ -182,6 +184,19 @@ export default function Login() {
               {isLoading ? 'جاري التحقق...' : 'تسجيل الدخول'}
               {!isLoading && <ArrowRight className="mr-2 h-5 w-5" />}
             </Button>
+
+            {activeTab === 'admin' && (
+              <p className="text-center text-sm text-secondary-500">
+                ليس لديك حساب؟{' '}
+                <button 
+                  type="button"
+                  onClick={() => navigate('/instructor/register')} 
+                  className="font-medium text-primary-600 hover:text-primary-500 hover:underline"
+                >
+                  تسجيل حساب معيد جديد
+                </button>
+              </p>
+            )}
 
             {activeTab === 'student' && (
               <p className="text-center text-sm text-secondary-500">

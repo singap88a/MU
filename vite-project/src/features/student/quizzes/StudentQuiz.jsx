@@ -28,28 +28,25 @@ export default function StudentQuiz() {
     }
 
     if (foundQuiz) {
+      console.log('📝 Found Quiz:', foundQuiz.title);
+      console.log('📊 Questions:', foundQuiz.questionsData?.length || 0);
       setQuiz(foundQuiz);
+    } else {
+      console.log('❌ Quiz not found with ID:', quizId);
     }
   }, [quizId]);
 
-  if (!quiz) return <div className="flex items-center justify-center h-screen">جاري التحميل...</div>;
-
-  // If no questions, show message
-  if (!quiz.questions || quiz.questions.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen flex-col gap-4">
-        <p>عفواً، لا توجد أسئلة في هذا الاختبار حالياً.</p>
-        <Button onClick={() => navigate('/student/dashboard')}>العودة للرئيسية</Button>
-      </div>
-    );
-  }
-
+  // Timer effect - moved up
   useEffect(() => {
+    // Only start timer if quiz exists and has questions
+    if (!quiz || !quiz.questionsData || quiz.questionsData.length === 0) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleSubmit();
+          // Auto submit logic is handled via effect or check in render to avoid state update in render
+          // simplified here to just stop at 0
           return 0;
         }
         return prev - 1;
@@ -57,7 +54,30 @@ export default function StudentQuiz() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [quiz]); // Added quiz dependency
+
+  // Handle auto-submit when time is 0
+  useEffect(() => {
+     if (timeLeft === 0 && !isSubmitting && quiz) {
+         handleSubmit();
+     }
+  }, [timeLeft, isSubmitting, quiz]);
+
+
+  if (!quiz) return <div className="flex items-center justify-center h-screen">جاري التحميل...</div>;
+
+  // Get questions from questionsData
+  const questions = quiz.questionsData || [];
+
+  // If no questions, show message
+  if (questions.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen flex-col gap-4">
+        <p>عفواً، لا توجد أسئلة في هذا الاختبار حالياً.</p>
+        <Button onClick={() => navigate('/student/dashboard')}>العودة للرئيسية</Button>
+      </div>
+    );
+  }
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -73,7 +93,7 @@ export default function StudentQuiz() {
     setIsSubmitting(true);
     // Calculate Score
     let score = 0;
-    quiz.questions.forEach((q, index) => {
+    questions.forEach((q, index) => {
       if (answers[index] === q.correctAnswer) score++;
     });
 
@@ -81,12 +101,14 @@ export default function StudentQuiz() {
       navigate('/student/quiz/result', { 
         state: { 
           score, 
-          total: quiz.questions.length,
+          total: questions.length,
           quizTitle: quiz.title 
         } 
       });
     }, 1000);
   };
+
+  const currentQ = questions[currentQuestion];
 
   return (
     <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col">
@@ -95,7 +117,7 @@ export default function StudentQuiz() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-bold text-lg text-secondary-900 dark:text-white">{quiz.title}</h1>
-            <p className="text-sm text-secondary-500">سؤال {currentQuestion + 1} من {quiz.questions.length}</p>
+            <p className="text-sm text-secondary-500">سؤال {currentQuestion + 1} من {questions.length}</p>
           </div>
           <div className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono font-bold ${timeLeft < 60 ? 'bg-red-100 text-red-600' : 'bg-primary-50 text-primary-600'}`}>
             <Clock className="h-5 w-5" />
@@ -109,11 +131,11 @@ export default function StudentQuiz() {
         <Card className="mb-8">
           <CardContent className="p-8">
             <h2 className="text-xl font-bold mb-6 leading-relaxed">
-              {quiz.questions[currentQuestion].text}
+              {currentQ.question || currentQ.text}
             </h2>
             
             <div className="space-y-3">
-              {quiz.questions[currentQuestion].options.map((option, idx) => (
+              {currentQ.options.map((option, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleAnswer(idx)}
@@ -142,7 +164,7 @@ export default function StudentQuiz() {
             السابق
           </Button>
 
-          {currentQuestion === quiz.questions.length - 1 ? (
+          {currentQuestion === questions.length - 1 ? (
             <Button 
               onClick={handleSubmit} 
               isLoading={isSubmitting}
@@ -152,7 +174,7 @@ export default function StudentQuiz() {
             </Button>
           ) : (
             <Button 
-              onClick={() => setCurrentQuestion(prev => Math.min(quiz.questions.length - 1, prev + 1))}
+              onClick={() => setCurrentQuestion(prev => Math.min(questions.length - 1, prev + 1))}
             >
               التالي
               <ChevronLeft className="mr-2 h-4 w-4" />
@@ -165,7 +187,7 @@ export default function StudentQuiz() {
       <div className="fixed bottom-0 left-0 right-0 h-2 bg-secondary-200 dark:bg-secondary-800">
         <div 
           className="h-full bg-primary-600 transition-all duration-300"
-          style={{ width: `${((currentQuestion + 1) / quiz.questions.length) * 100}%` }}
+          style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
         />
       </div>
     </div>

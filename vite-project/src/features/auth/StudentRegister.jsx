@@ -1,42 +1,88 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, FileText, GraduationCap, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { User, FileText, GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, Hash } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
+import { useSectionContext } from '../../context/SectionContext';
 
 export default function StudentRegister() {
   const navigate = useNavigate();
+  const { getSectionByCode } = useSectionContext();
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [sectionInfo, setSectionInfo] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     nationalId: '',
     universityId: '',
     year: '1',
     department: 'عام',
-    section: '1'
+    sectionCode: ''
   });
 
   const handleNext = (e) => {
     e.preventDefault();
+    setError('');
     setStep(step + 1);
   };
 
   const handleBack = () => {
+    setError('');
     setStep(step - 1);
+  };
+
+  const handleSectionCodeChange = (e) => {
+    const code = e.target.value.toUpperCase();
+    setFormData({...formData, sectionCode: code});
+    
+    if (code.length === 6) {
+      // Try to get section from context first
+      let section = getSectionByCode(code);
+      
+      // If not found in context, try localStorage directly
+      if (!section) {
+        const storedSections = JSON.parse(localStorage.getItem('sections_data') || '[]');
+        section = storedSections.find(s => s.sectionCode === code);
+      }
+      
+      if (section) {
+        setSectionInfo(section);
+        setError('');
+      } else {
+        setSectionInfo(null);
+        setError('كود السكشن غير صحيح');
+      }
+    } else {
+      setSectionInfo(null);
+      setError('');
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!sectionInfo) {
+      setError('يجب إدخال كود سكشن صحيح');
+      return;
+    }
+
+    setError('');
     setIsLoading(true);
 
     setTimeout(() => {
       const storedStudents = JSON.parse(localStorage.getItem('students') || '[]');
-      const newStudent = { ...formData, id: Date.now() };
+      const newStudent = { 
+        ...formData, 
+        id: Date.now(),
+        section: sectionInfo.number, // For backward compatibility
+        instructorId: sectionInfo.instructorId // Link to instructor
+      };
       localStorage.setItem('students', JSON.stringify([...storedStudents, newStudent]));
       
       setIsLoading(false);
+      alert('تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول');
       navigate('/login'); // Redirect to the main login page
     }, 1500);
   };
@@ -82,6 +128,12 @@ export default function StudentRegister() {
         <div className="w-full max-w-2xl">
           <form onSubmit={step === 3 ? handleSubmit : handleNext} className="space-y-8">
             
+            {error && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+
             {step === 1 && (
                 <div className="space-y-4 animate-in slide-in-from-right-8 duration-500">
                     <div className="space-y-2">
@@ -116,48 +168,30 @@ export default function StudentRegister() {
                             onChange={(e) => setFormData({...formData, universityId: e.target.value})}
                         />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">الفرقة الدراسية</label>
-                            <select 
-                                className="flex h-10 w-full rounded-lg border border-secondary-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-secondary-950 dark:border-secondary-800"
-                                value={formData.year}
-                                onChange={(e) => setFormData({...formData, year: e.target.value})}
-                            >
-                                <option value="1">الفرقة الأولى</option>
-                                <option value="2">الفرقة الثانية</option>
-                                <option value="3">الفرقة الثالثة</option>
-                                <option value="4">الفرقة الرابعة</option>
-                            </select>
+                    
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">كود السكشن</label>
+                        <div className="relative">
+                          <Hash className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary-400" />
+                          <Input 
+                              required 
+                              className="pr-10 font-mono uppercase"
+                              placeholder="أدخل الكود المكون من 6 أحرف" 
+                              maxLength={6}
+                              value={formData.sectionCode}
+                              onChange={handleSectionCodeChange}
+                          />
                         </div>
-                         <div className="space-y-2">
-                            <label className="text-sm font-medium">القسم</label>
-                            <select 
-                                className="flex h-10 w-full rounded-lg border border-secondary-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-secondary-950 dark:border-secondary-800"
-                                value={formData.department}
-                                onChange={(e) => setFormData({...formData, department: e.target.value})}
-                            >
-                                <option value="عام">عام</option>
-                                <option value="CS">علوم حاسب</option>
-                                <option value="IS">نظم معلومات</option>
-                                <option value="IT">تكنولوجيا معلومات</option>
-                            </select>
-                        </div>
-                    </div>
-                     <div className="space-y-2">
-                        <label className="text-sm font-medium">السكشن</label>
-                        <select 
-                            className="flex h-10 w-full rounded-lg border border-secondary-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-secondary-950 dark:border-secondary-800"
-                            value={formData.section}
-                            onChange={(e) => setFormData({...formData, section: e.target.value})}
-                        >
-                            <option value="1">سكشن 1</option>
-                            <option value="2">سكشن 2</option>
-                            <option value="3">سكشن 3</option>
-                            <option value="4">سكشن 4</option>
-                            <option value="5">سكشن 5</option>
-                            <option value="6">سكشن 6</option>
-                        </select>
+                        {sectionInfo && (
+                          <div className="mt-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                            <p className="text-sm text-green-700 dark:text-green-400 font-medium">
+                              ✓ سكشن {sectionInfo.number} - {sectionInfo.subject}
+                            </p>
+                            <p className="text-xs text-green-600 dark:text-green-500 mt-1">
+                              {sectionInfo.year} • {sectionInfo.department}
+                            </p>
+                          </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -180,9 +214,17 @@ export default function StudentRegister() {
                                 <span className="font-medium">{formData.universityId}</span>
                             </div>
                              <div>
-                                <span className="text-secondary-500 block">الفرقة / القسم</span>
-                                <span className="font-medium">{formData.year} - {formData.department}</span>
+                                <span className="text-secondary-500 block">كود السكشن</span>
+                                <span className="font-medium font-mono">{formData.sectionCode}</span>
                             </div>
+                            {sectionInfo && (
+                              <div className="col-span-2">
+                                <span className="text-secondary-500 block">معلومات السكشن</span>
+                                <span className="font-medium">
+                                  {sectionInfo.subject} - {sectionInfo.year} ({sectionInfo.department})
+                                </span>
+                              </div>
+                            )}
                         </div>
                     </div>
                 </div>
